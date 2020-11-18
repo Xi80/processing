@@ -6,10 +6,9 @@ PFont  font;
  *  This Programme was coded by H31E26 Itsuki Hashimoto
 */
 
-
 //------------
 //constants
-  int[]   HOUR = {1,1};
+  int[]   HOUR = {1,9};
   int[]   MINUTE = {3,0};
 
   int[]   _BACKGROUND_COLOUR = {102,102,102};
@@ -35,23 +34,23 @@ PFont  font;
   String  _TIME_CHARACTER_PATH = "time/";
   int[]   _TIME_CHARACTER_SIZE = {10,38};
   int     _TIME_CHARACTER_STEP = 10;
-  int[]   _TIME_CHARACTER_OFFSET = {0,0};
+  int[]   _TIME_CHARACTER_OFFSET = {0,15};
 
   String  _TRAIN_TYPE_PATH = "type/";
   int[]   _TRAIN_TYPE_SIZE = {60,35};
-  int[]   _TRAIN_TYPE_OFFSET = {0,0};
+  int[]   _TRAIN_TYPE_OFFSET = {60,17};
 
   String  _DEST_STATION_PATH = "dest/";
   int[]   _DEST_STATION_SIZE = {80,35};
-  int[]   _DEST_STATION_OFFSET = {0,0};
+  int[]   _DEST_STATION_OFFSET = {130,15};
 
   String  _DEPT_PLATFORM_PATH = "home/";
   int[]   _DEPT_PLATFORM_SIZE = {35,35};
-  int[]   _DEPT_PLATFORM_OFFSET = {0,0};
+  int[]   _DEPT_PLATFORM_OFFSET = {220,15};
 
-  int[][] _TEXT_AREA_OFFSET = {{0,0},{0,0},{0,0}};
-  int     _TEXT_AREA_CHARACTER_SIZE = 10;
-  int     _TEXT_AREA_CAPACITY = 20;
+  int[]   _TEXT_AREA_OFFSET = {5,5};
+  int     _TEXT_AREA_CHARACTER_SIZE = 12;
+  int     _TEXT_AREA_LEADING = 20;
   String  _TIME_TABLE_PATH = "table/";
 //------------
 
@@ -61,12 +60,31 @@ PFont  font;
 void setup(){
   size(800,500);
   showBackground();
-
+  /*
   drawTime(195,85,HOUR,MINUTE);
-  drawTrainType(250,85,"express");
-  drawDestination(320,85,"shiroko");
+  drawTrainType(250,85,"limited-express");
+  drawDestination(320,85,"nara");
   drawPlatformNumber(405,85,1);
+  drawMessage(_DISPLAY_SLOT_START_OFFSET[1][0],_DISPLAY_SLOT_START_OFFSET[1][1],"丹波橋　高の原　大和西大寺\n\n（ご乗車には特急券が必要です）");
+  */
+  show();
+}
 
+void show(){
+  String[] lines = loadStrings(_TIME_TABLE_PATH + "table.txt");
+  for(int i = 0;i < lines.length;i++){
+    String[] line = splitTokens(lines[i],"|");
+    for(int j = 0;j < 2;j++){
+      HOUR[j] = int(line[j]);
+      MINUTE[j] = int(line[j+2]);
+    }
+    drawTime(_DISPLAY_SLOT_START_OFFSET[0][0],((i > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + i * _DISPLAY_SLOT_STEP,HOUR,MINUTE);
+    drawTrainType(_DISPLAY_SLOT_START_OFFSET[0][0],((i > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + i * _DISPLAY_SLOT_STEP,line[4]);
+    drawDestination(_DISPLAY_SLOT_START_OFFSET[0][0],((i > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + i * _DISPLAY_SLOT_STEP,line[5]);
+    drawPlatformNumber(_DISPLAY_SLOT_START_OFFSET[0][0],((i > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + i * _DISPLAY_SLOT_STEP,int(line[6]));
+    String msg = line[7] + "\n" + line[8] + "\n" + line[9];
+    drawMessage(_DISPLAY_SLOT_START_OFFSET[1][0],((i > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[1][1] + i * _DISPLAY_SLOT_STEP,msg);
+  }
 }
 
 //Summary :Draw Background
@@ -132,7 +150,7 @@ void drawTrainType(int x,int y,String type){
 //Return  :None
 void drawDestination(int x,int y,String stationName){
   img = loadImage(_DEST_STATION_PATH + stationName + ".png");
-  image(img,x,y,_DEST_STATION_SIZE[0],_DEST_STATION_SIZE[1]);
+  image(img,x + _DEST_STATION_OFFSET[0],y + _DEST_STATION_OFFSET[1],_DEST_STATION_SIZE[0],_DEST_STATION_SIZE[1]);
 }
 
 //Summary :Draw Platform Number
@@ -143,4 +161,12 @@ void drawPlatformNumber(int x,int y,int number){
   image(img,_DEPT_PLATFORM_OFFSET[0] + x,_DEPT_PLATFORM_OFFSET[1] + y,_DEPT_PLATFORM_SIZE[0],_DEPT_PLATFORM_SIZE[1]);
 }
 
+void drawMessage(int x,int y,String msg){
+  font =  createFont("MS UI Gothic",_TEXT_AREA_CHARACTER_SIZE);
+  textFont(font,_TEXT_AREA_CHARACTER_SIZE);
+  textAlign(LEFT, TOP);
+  textLeading(_TEXT_AREA_LEADING);
+  fill(255);
+  text(msg,x + _TEXT_AREA_OFFSET[0],y + _TEXT_AREA_OFFSET[1]);
+}
 
