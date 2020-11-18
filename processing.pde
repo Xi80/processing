@@ -54,36 +54,47 @@ PFont  font;
   String  _TIME_TABLE_PATH = "table/";
 //------------
 
+String[] lines;
+int index = 0;
+
 //Summary :Initialise
 //Param   :None
 //Return  :None
 void setup(){
   size(800,500);
+  lines = loadStrings(_TIME_TABLE_PATH + "table.txt");
+}
+
+
+void draw(){
   showBackground();
-  /*
-  drawTime(195,85,HOUR,MINUTE);
-  drawTrainType(250,85,"limited-express");
-  drawDestination(320,85,"nara");
-  drawPlatformNumber(405,85,1);
-  drawMessage(_DISPLAY_SLOT_START_OFFSET[1][0],_DISPLAY_SLOT_START_OFFSET[1][1],"丹波橋　高の原　大和西大寺\n\n（ご乗車には特急券が必要です）");
-  */
   show();
 }
 
 void show(){
-  String[] lines = loadStrings(_TIME_TABLE_PATH + "table.txt");
+
   for(int i = 0;i < lines.length;i++){
+    String[] line = splitTokens(lines[i],"|");
+    int h = int(line[0]) * 10 + int(line[1]);
+    int m = int(line[2]) * 10 + int(line[3]);
+    if(minute() <= m && hour() <= h){
+      index = i;
+      break;
+    }
+  }
+
+  for(int i = index;i < min(index + 6,lines.length);i++){
     String[] line = splitTokens(lines[i],"|");
     for(int j = 0;j < 2;j++){
       HOUR[j] = int(line[j]);
       MINUTE[j] = int(line[j+2]);
     }
-    drawTime(_DISPLAY_SLOT_START_OFFSET[0][0],((i > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + i * _DISPLAY_SLOT_STEP,HOUR,MINUTE);
-    drawTrainType(_DISPLAY_SLOT_START_OFFSET[0][0],((i > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + i * _DISPLAY_SLOT_STEP,line[4]);
-    drawDestination(_DISPLAY_SLOT_START_OFFSET[0][0],((i > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + i * _DISPLAY_SLOT_STEP,line[5]);
-    drawPlatformNumber(_DISPLAY_SLOT_START_OFFSET[0][0],((i > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + i * _DISPLAY_SLOT_STEP,int(line[6]));
+    drawTime(_DISPLAY_SLOT_START_OFFSET[0][0],(((i - index) > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + (i - index) * _DISPLAY_SLOT_STEP,HOUR,MINUTE);
+    drawTrainType(_DISPLAY_SLOT_START_OFFSET[0][0],(((i - index) > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + (i - index) * _DISPLAY_SLOT_STEP,line[4]);
+    drawDestination(_DISPLAY_SLOT_START_OFFSET[0][0],(((i - index) > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + (i - index) * _DISPLAY_SLOT_STEP,line[5]);
+    drawPlatformNumber(_DISPLAY_SLOT_START_OFFSET[0][0],(((i - index) > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + (i - index) * _DISPLAY_SLOT_STEP,int(line[6]));
     String msg = line[7] + "\n" + line[8] + "\n" + line[9];
-    drawMessage(_DISPLAY_SLOT_START_OFFSET[1][0],((i > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[1][1] + i * _DISPLAY_SLOT_STEP,msg);
+    drawMessage(_DISPLAY_SLOT_START_OFFSET[1][0],(((i - index) > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[1][1] + (i - index) * _DISPLAY_SLOT_STEP,msg);
   }
 }
 
