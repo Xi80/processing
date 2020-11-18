@@ -9,7 +9,6 @@ PFont  font;
 
 //------------
 //constants
-
   int[]   HOUR = {1,1};
   int[]   MINUTE = {3,0};
 
@@ -109,7 +108,7 @@ void showBackground(){
 //Return  :None
 void drawTime(int x,int y,int[] h,int[] m){
   for(int i = 0;i < 5;i++){
-    img = loadImage(_TIME_CHARACTER_PATH + ((i==2)? "colon": ((i < 2)? h[i]:m[i - 3] )) + ".png");
+    img = loadImage(_TIME_CHARACTER_PATH + ((i==2)? "colon": ((i < 2)? h[i]:m[i - 3])) + ".png");
     image(
       img,
       _TIME_CHARACTER_OFFSET[0] + _TIME_CHARACTER_STEP * i + x,
@@ -124,24 +123,24 @@ void drawTime(int x,int y,int[] h,int[] m){
 //Param   :(int)XPos,(int)YPos, (String)Type
 //Return  :None
 void drawTrainType(int x,int y,String type){
-  img = loadImage("type/" + type + ".png");
-  image(img,x,y,60,35);
+  img = loadImage(_TRAIN_TYPE_PATH + type + ".png");
+  image(img,_TRAIN_TYPE_OFFSET[0] + x,_TRAIN_TYPE_OFFSET[1] + y,_TRAIN_TYPE_SIZE[0],_TRAIN_TYPE_SIZE[1]);
 }
 
 //Summary :Draw Destination
 //Param   :(int)XPos,(int)YPos, (String)Station Name
 //Return  :None
 void drawDestination(int x,int y,String stationName){
-  img = loadImage("dest/" + stationName + ".png");
-  image(img,x,y,80,35);
+  img = loadImage(_DEST_STATION_PATH + stationName + ".png");
+  image(img,x,y,_DEST_STATION_SIZE[0],_DEST_STATION_SIZE[1]);
 }
 
 //Summary :Draw Platform Number
 //Param   :(int)XPos,(int)YPos, (int)Platform Number
 //Return  :None
 void drawPlatformNumber(int x,int y,int number){
-  img = loadImage("home/" + number + ".png");
-  image(img,x,y,35,35);
+  img = loadImage(_DEPT_PLATFORM_PATH + number + ".png");
+  image(img,_DEPT_PLATFORM_OFFSET[0] + x,_DEPT_PLATFORM_OFFSET[1] + y,_DEPT_PLATFORM_SIZE[0],_DEPT_PLATFORM_SIZE[1]);
 }
 
 
