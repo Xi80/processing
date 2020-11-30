@@ -7,6 +7,9 @@ PFont  font;
 */
 
 //------------
+//debug mode
+  boolean DEBUG = false;
+
 //constants
   int[]   HOUR = {1,9};
   int[]   MINUTE = {3,0};
@@ -77,7 +80,7 @@ void show(){
     String[] line = splitTokens(lines[i],"|");
     int h = int(line[0]) * 10 + int(line[1]);
     int m = int(line[2]) * 10 + int(line[3]);
-    if(minute() <= m && hour() <= h){
+    if(minute() + hour() * 60 <= m + h * 60){
       index = i;
       break;
     }
@@ -85,6 +88,14 @@ void show(){
 
   for(int i = index;i < min(index + 6,lines.length);i++){
     String[] line = splitTokens(lines[i],"|");
+    if(DEBUG){
+      for(int j = 0;j < line.length;j++){
+        if(j % 10 == 0){
+          println();
+        }
+        print(line[j]," ");
+      }
+    }
     for(int j = 0;j < 2;j++){
       HOUR[j] = int(line[j]);
       MINUTE[j] = int(line[j+2]);
@@ -180,4 +191,3 @@ void drawMessage(int x,int y,String msg){
   fill(255);
   text(msg,x + _TEXT_AREA_OFFSET[0],y + _TEXT_AREA_OFFSET[1]);
 }
-
