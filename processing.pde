@@ -9,7 +9,7 @@ PFont  font;
 //------------
 //debug mode
   boolean DEBUG = false;
-
+  boolean ZOOM = true;
 //constants
   int[]   HOUR = {1,9};
   int[]   MINUTE = {3,0};
@@ -64,16 +64,22 @@ int index = 0;
 //Param   :None
 //Return  :None
 void setup(){
-  size(800,500);
+  size(800,500,OPENGL);
+  frameRate(60);
   lines = loadStrings(_TIME_TABLE_PATH + "table.txt");
 }
 
-
+//Summary :Draw
+//Param   :None
+//Return  :None
 void draw(){
   showBackground();
   show();
 }
 
+//Summary :Main Method
+//Param   :None
+//Return  :None
 void show(){
 
   for(int i = 0;i < lines.length;i++){
@@ -183,6 +189,9 @@ void drawPlatformNumber(int x,int y,int number){
   image(img,_DEPT_PLATFORM_OFFSET[0] + x,_DEPT_PLATFORM_OFFSET[1] + y,_DEPT_PLATFORM_SIZE[0],_DEPT_PLATFORM_SIZE[1]);
 }
 
+//Summary :Draw Message
+//Param   :None
+//Return  :None
 void drawMessage(int x,int y,String msg){
   font =  createFont("MS UI Gothic",_TEXT_AREA_CHARACTER_SIZE);
   textFont(font,_TEXT_AREA_CHARACTER_SIZE);
