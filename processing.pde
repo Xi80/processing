@@ -233,7 +233,7 @@ void show() {
     
     if(!(types[recentTrainType[i-index]].equals(line[4]))){
       println(types[recentTrainType[i-index]],line[4]);
-      recentTrainType[i-index] = (recentTrainType[i-index] + 1) % (types.length - 1);
+      recentTrainType[i-index] = (recentTrainType[i-index] + 1) % (types.length);
     }
     
     if((types[(recentTrainType[i-index] != 0)? recentTrainType[i-index] - 1 : (types.length - 1)]) != line[4]){
@@ -246,7 +246,7 @@ void show() {
     }
    
     if(!(dests[recentDest[i-index]].equals(line[5]))){
-      recentDest[i-index] = (recentDest[i-index] == dests.length - 1)? 0 : recentDest[i-index] + 1;
+      recentDest[i-index] = (recentDest[i-index] == dests.length - 1)? 0 : ((recentDest[i-index] + 1) % dests.length);
     }
     
     if(dests[(recentDest[i-index] == 0)? dests.length - 1 : recentDest[i-index] - 1] != line[5]){
