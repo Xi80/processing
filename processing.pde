@@ -15,8 +15,79 @@ int[] recentDest = new int[6];
 int[] recentPlatform = new int[6];
 String[][] recentMessage = new String[6][3];
 
-String[] dests;
-String[] types;
+String[] dests = {
+  "amagasaki",
+  "aoyamacho",
+  "fujiidera",
+  "furuichi",
+  "goido",
+  "haibara",
+  "higashi-hanazono",
+  "higashi-ikoma",
+  "higashiyama",
+  "hiratacho",
+  "hyotan-yama",
+  "ise-nakagawa",
+  "ishikiri",
+  "isuzugawa",
+  "kashiharajingu-mae-nara",
+  "kashiharajingu-mae",
+  "kashikojima",
+  "kawachi-amami",
+  "kawachi-kokubu",
+  "kawachi-nagano",
+  "kuwana",
+  "kyoto-kokusaikaikan",
+  "kyoto-osaka-namba",
+  "kyoto",
+  "matsuzaka",
+  "mino-matsuyama",
+  "miyazu",
+  "nabari",
+  "nagoya",
+  "nara",
+  "ogaki",
+  "oji",
+  "osaka-namba",
+  "osaka-uehommachi",
+  "shin-tanabe",
+  "shiohama",
+  "shiratsuka",
+  "shiroko",
+  "takayasu",
+  "tenri",
+  "toba",
+  "tomiyoshi",
+  "tondabayashi",
+  "tsu-shimmachi",
+  "tsu",
+  "ujiyamada",
+  "yamato-saidaiji",
+  "yamato-yagi",
+  "yokkaichi",
+  "yoro",
+  "yoshino",
+  "yunoyama-onsen",
+};
+
+String[] types = {
+  "express-kaiungo",
+  "express-katsuragi-kogen",
+  "express",
+  "ise-shima-liner-2",
+  "ise-shima-liner",
+  "limited-express",
+  "local",
+  "rapid-express-sakura",
+  "rapid-express",
+  "sakura-liner",
+  "semi-express",
+  "shimakaze",
+  "sub-express",
+  "sub-rapid-exp",
+  "sub-semi-exp",
+  "urban-liner",
+};
 
 //debug mode
 boolean DEBUG = false;
@@ -81,11 +152,17 @@ void setup() {
   size(800, 500);
   frameRate(60);
   lines = loadStrings(_TABLE_PATH + "table.txt");
-  dests = loadStrings(_TABLE_PATH + _DEST_STATION_TABLE);
-  types = loadStrings(_TABLE_PATH + _TRAIN_TYPE_TABLE);
   
   for(int i = 0;i < dests.length;i++){
     println(dests[i]);
+  }
+  
+  for(int i = 0;i < recentTrainType.length;i++){
+    recentTrainType[i] = 1;
+  }
+  
+  for(int i = 0;i < types.length - 1;i++){
+    println(i,types[i]);
   }
 }
 
@@ -111,7 +188,7 @@ void show() {
       break;
     }
   }
-
+  println("-----------------");
   for (int i = index; i < min(index + 6, lines.length); i++) {
     String[] line = splitTokens(lines[i], "|");
     if (DEBUG) {
@@ -154,23 +231,32 @@ void show() {
       );    
     }
     
-    if(types[recentTrainType[i-index]] != line[4]){
-      recentTrainType[i-index] = (recentTrainType[i-index] + 1) % types.length;
+    if(!(types[recentTrainType[i-index]].equals(line[4]))){
+      println(types[recentTrainType[i-index]],line[4]);
+      recentTrainType[i-index] = (recentTrainType[i-index] + 1) % (types.length - 1);
     }
-    println(types[recentTrainType[i-index]]);
-    if(types[abs((recentTrainType[i-index] - 1) % types.length)] != line[4]){
+    
+    if((types[(recentTrainType[i-index] != 0)? recentTrainType[i-index] - 1 : (types.length - 1)]) != line[4]){
+      
       drawTrainType(
         _DISPLAY_SLOT_START_OFFSET[0][0], 
         (((i - index) > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + (i - index) * _DISPLAY_SLOT_STEP, 
         types[recentTrainType[i-index]]
-      );     
+      );
     }
-      
-    drawDestination(
-      _DISPLAY_SLOT_START_OFFSET[0][0], 
-      (((i - index) > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + (i - index) * _DISPLAY_SLOT_STEP, 
-      line[5]
-    );
+   
+    if(!(dests[recentDest[i-index]].equals(line[5]))){
+      recentDest[i-index] = (recentDest[i-index] == dests.length - 1)? 0 : recentDest[i-index] + 1;
+    }
+    
+    if(dests[(recentDest[i-index] == 0)? dests.length - 1 : recentDest[i-index] - 1] != line[5]){
+      drawDestination(
+        _DISPLAY_SLOT_START_OFFSET[0][0], 
+        (((i - index) > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + (i - index) * _DISPLAY_SLOT_STEP, 
+        dests[recentDest[i-index]]
+      );    
+    }
+
     
     if(recentPlatform[i-index] != int(line[6])){
       recentPlatform[i-index] = (recentPlatform[i-index] == 6)? 1 : recentPlatform[i-index] + 1;
