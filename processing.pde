@@ -89,9 +89,6 @@ String[] types = {
   "urban-liner",
 };
 
-//debug mode
-boolean DEBUG = false;
-
 //constants
 int[]   HOUR = {1, 9};
 int[]   MINUTE = {3, 0};
@@ -152,18 +149,6 @@ void setup() {
   size(800, 500);
   frameRate(60);
   lines = loadStrings(_TABLE_PATH + "table.txt");
-  
-  for(int i = 0;i < dests.length;i++){
-    println(dests[i]);
-  }
-  
-  for(int i = 0;i < recentTrainType.length;i++){
-    recentTrainType[i] = 1;
-  }
-  
-  for(int i = 0;i < types.length - 1;i++){
-    println(i,types[i]);
-  }
 }
 
 //Summary :Draw
@@ -188,17 +173,8 @@ void show() {
       break;
     }
   }
-  println("-----------------");
   for (int i = index; i < min(index + 6, lines.length); i++) {
     String[] line = splitTokens(lines[i], "|");
-    if (DEBUG) {
-      for (int j = 0; j < line.length; j++) {
-        if (j % 10 == 0) {
-          println();
-        }
-        print(line[j], " ");
-      }
-    }
     
     for (int j = 0; j < 2; j++) {
       HOUR[j] = int(line[j]);
@@ -232,12 +208,10 @@ void show() {
     }
     
     if(!(types[recentTrainType[i-index]].equals(line[4]))){
-      println(types[recentTrainType[i-index]],line[4]);
       recentTrainType[i-index] = (recentTrainType[i-index] + 1) % (types.length);
     }
     
     if((types[(recentTrainType[i-index] != 0)? recentTrainType[i-index] - 1 : (types.length - 1)]) != line[4]){
-      
       drawTrainType(
         _DISPLAY_SLOT_START_OFFSET[0][0], 
         (((i - index) > 2)? _DISPLAY_SLOT_SEPARATER_OFFSET - _DISPLAY_SLOT_STEP : 0) + _DISPLAY_SLOT_START_OFFSET[0][1] + (i - index) * _DISPLAY_SLOT_STEP, 
